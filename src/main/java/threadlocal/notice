@@ -1,3 +1,6 @@
 1、threadlocal关键字
 
 2、https://www.cnblogs.com/dolphin0520/p/3920407.html
+
+3、ThreadLocal什么时候会出现OOM的情况？为什么？
+  https://blog.csdn.net/bntx2jsqfehy7/article/details/78315161
