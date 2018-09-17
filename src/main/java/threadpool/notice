@@ -1,0 +1,5 @@
+1、创建线程池（四种方式 https://www.cnblogs.com/jmcui/p/8017473.html）
+
+2、对比ExecutorService中submit和execute的区别（https://www.cnblogs.com/wanqieddy/p/3853863.html）
+
+3、线程安全测试
