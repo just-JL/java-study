@@ -1,0 +1,17 @@
+1、CyclicBarrier 的字面意思是可循环使用（Cyclic）的屏障（Barrier）。
+它要做的事情是，让一组线程到达一个屏障（也可以叫同步点）时被阻塞，
+直到最后一个线程到达屏障时，屏障才会开门，所有被屏障拦截的线程才会继续干活。
+CyclicBarrier默认的构造方法是CyclicBarrier(int parties)，其参数表示屏障拦截的线程数量，
+每个线程调用await方法告诉CyclicBarrier我已经到达了屏障，然后当前线程被阻塞。
+
+2、对于使用者来讲，我们无需关心获取资源失败，线程排队，线程阻塞/唤醒等一系列复杂的实现，这些都在AQS中为我们处理好了。
+我们只需要负责好自己的那个环节就好，也就是获取/释放共享资源state的姿势T_T。
+很经典的模板方法设计模式的应用，AQS为我们定义好顶级逻辑的骨架，并提取出公用的线程入队列/出队列，
+阻塞/唤醒等一系列复杂逻辑的实现，将部分简单的可由使用者决定的操作逻辑延迟到子类中去实现即可。
+
+3、我们来看看AQS定义的这些可重写的方法：
+protected boolean tryAcquire(int arg) : 独占式获取同步状态，试着获取，成功返回true，反之为false；
+protected boolean tryRelease(int arg) ：独占式释放同步状态，等待中的其他线程此时将有机会获取到同步状态；
+protected int tryAcquireShared(int arg) ：共享式获取同步状态，返回值大于等于0，代表获取成功；反之获取失败；   　　　　
+protected boolean tryReleaseShared(int arg) ：共享式释放同步状态，成功为true，失败为false；
+protected boolean isHeldExclusively() ： 是否在独占模式下被线程占用
