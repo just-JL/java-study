@@ -15,3 +15,5 @@ protected boolean tryRelease(int arg) ：独占式释放同步状态，等待中
 protected int tryAcquireShared(int arg) ：共享式获取同步状态，返回值大于等于0，代表获取成功；反之获取失败；   　　　　
 protected boolean tryReleaseShared(int arg) ：共享式释放同步状态，成功为true，失败为false；
 protected boolean isHeldExclusively() ： 是否在独占模式下被线程占用
+
+4、同步器是实现锁（也可以是任意同步组件）的关键，在锁的实现中聚合（组合）同步器，利用同步器实现锁的语义
