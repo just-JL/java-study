@@ -1,0 +1,2 @@
+适配器模式
+隐藏实现细节，例如canal中ES和Hbase的client-adapter。
