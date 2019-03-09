@@ -1,7 +1,7 @@
 package designPattern.factory;
 
+import designPattern.factory.framework.Factory;
 import designPattern.factory.framework.Product;
-import designPattern.factory.idcard.IDCard;
 import designPattern.factory.idcard.IDCardFactory;
 
 /**
@@ -12,7 +12,7 @@ import designPattern.factory.idcard.IDCardFactory;
 public class Main {
 
     public static void main(String[] args) {
-        IDCardFactory factory = new IDCardFactory();
+        Factory factory = new IDCardFactory();
         Product card1 = factory.create("jj");
         Product card2 = factory.create("ll");
 
@@ -20,7 +20,5 @@ public class Main {
 
         card1.use();
         card2.use();
-
-        System.out.println(factory.getOwners());
     }
 }
