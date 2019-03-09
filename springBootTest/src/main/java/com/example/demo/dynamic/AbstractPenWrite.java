@@ -1,4 +1,4 @@
-package com.example.demo.testDynamic;
+package com.example.demo.dynamic;
 
 /**
  * author:jiliang

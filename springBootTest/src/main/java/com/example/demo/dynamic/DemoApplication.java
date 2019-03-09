@@ -1,7 +1,7 @@
-package com.example.demo;
+package com.example.demo.dynamic;
 
-import com.example.demo.testDynamic.compile.impl.JdkCompiler;
-import com.example.demo.testDynamic.compile.model.JavaSource;
+import com.example.demo.dynamic.compile.impl.JdkCompiler;
+import com.example.demo.dynamic.compile.model.JavaSource;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

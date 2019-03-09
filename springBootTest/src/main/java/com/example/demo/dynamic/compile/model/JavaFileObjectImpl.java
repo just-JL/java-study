@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.example.demo.testDynamic.compile.model;
+package com.example.demo.dynamic.compile.model;
 
-import com.example.demo.testDynamic.compile.impl.JdkCompileTask;
+import com.example.demo.dynamic.compile.impl.JdkCompileTask;
 
 import javax.tools.SimpleJavaFileObject;
 import java.io.ByteArrayInputStream;

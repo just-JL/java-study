@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.example.demo.testDynamic.compile.impl;
+package com.example.demo.dynamic.compile.impl;
 
-import com.example.demo.testDynamic.compile.exception.JdkCompileException;
-import com.example.demo.testDynamic.compile.model.JavaFileManagerImpl;
-import com.example.demo.testDynamic.compile.model.JavaFileObjectImpl;
-import com.example.demo.testDynamic.compile.model.JdkCompilerClassLoader;
+import com.example.demo.dynamic.compile.exception.JdkCompileException;
+import com.example.demo.dynamic.compile.model.JavaFileManagerImpl;
+import com.example.demo.dynamic.compile.model.JavaFileObjectImpl;
+import com.example.demo.dynamic.compile.model.JdkCompilerClassLoader;
 
 import javax.tools.*;
 import javax.tools.JavaCompiler.CompilationTask;

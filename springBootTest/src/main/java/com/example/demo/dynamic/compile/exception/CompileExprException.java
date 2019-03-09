@@ -14,14 +14,23 @@
  * limitations under the License.
  */
 
-package com.example.demo.testDynamic.compile;
+package com.example.demo.dynamic.compile.exception;
 
-import com.example.demo.testDynamic.compile.model.JavaSource;
+/**
+ * 类CompileExprException.java的实现描述：TODO 类实现描述
+ * 
+ * @author simon 2012-10-18 上午10:36:05
+ * @version 4.1.0
+ */
+public class CompileExprException extends RuntimeException {
 
-public interface JavaSourceCompiler {
+    private static final long serialVersionUID = 1L;
 
-    Class compile(String sourceString);
+    public CompileExprException(String message){
+        super(message);
+    }
 
-    Class compile(JavaSource javaSource);
-
+    public CompileExprException(String message, Throwable cause){
+        super(message, cause);
+    }
 }

@@ -1,4 +1,4 @@
-package com.example.demo.testDynamic.utils;
+package com.example.demo.dynamic.utils;
 
 import java.util.Map;
 

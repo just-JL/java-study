@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.example.demo.testDynamic.compile.model;
+package com.example.demo.dynamic.compile.model;
 
-import com.example.demo.testDynamic.utils.RegexUtils;
+import com.example.demo.dynamic.utils.RegexUtils;
 import org.apache.commons.lang.StringUtils;
 
 /**

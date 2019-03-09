@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package com.example.demo.testDynamic.compile.impl;
+package com.example.demo.dynamic.compile.impl;
 
-import com.example.demo.testDynamic.compile.JavaSourceCompiler;
-import com.example.demo.testDynamic.compile.exception.CompileExprException;
-import com.example.demo.testDynamic.compile.exception.JdkCompileException;
-import com.example.demo.testDynamic.compile.model.JavaSource;
-import com.example.demo.testDynamic.compile.model.JdkCompilerClassLoader;
-import org.springframework.stereotype.Component;
+import com.example.demo.dynamic.compile.JavaSourceCompiler;
+import com.example.demo.dynamic.compile.exception.CompileExprException;
+import com.example.demo.dynamic.compile.exception.JdkCompileException;
+import com.example.demo.dynamic.compile.model.JavaSource;
+import com.example.demo.dynamic.compile.model.JdkCompilerClassLoader;
 
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;

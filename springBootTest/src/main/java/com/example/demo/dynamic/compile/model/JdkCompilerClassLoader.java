@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.demo.testDynamic.compile.model;
+package com.example.demo.dynamic.compile.model;
 
 import javax.tools.JavaFileObject;
 import java.io.ByteArrayInputStream;

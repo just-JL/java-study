@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.demo.testDynamic.compile.exception;
+package com.example.demo.dynamic.compile.exception;
 
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
