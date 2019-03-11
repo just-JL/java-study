@@ -13,7 +13,7 @@ public class Queue {
     public static ArrayBlockingQueue arrayBlockingQueue1 = new ArrayBlockingQueue(3);
     public static ArrayBlockingQueue arrayBlockingQueue2 = new ArrayBlockingQueue(3);
 
-    public static void main(String[] args){
+    public static void main(String[] args)throws Exception {
 //        ArrayBlockingQueue arrayBlockingQueue = new ArrayBlockingQueue(3);
 //        for (int i=0; i<4; i++){
 ////            arrayBlockingQueue.add(i);
@@ -63,12 +63,16 @@ public class Queue {
 
         arrayBlockingQueue2.offer(new Human("jl"));
 
-        System.out.println((Human)arrayBlockingQueue2.peek());
-        System.out.println((Human)arrayBlockingQueue2.element());
-        System.out.println(((Human)arrayBlockingQueue2.peek()).getName());
+//        System.out.println((Human)arrayBlockingQueue2.peek());
+//        System.out.println((Human)arrayBlockingQueue2.element());
 //        System.out.println(((Human)arrayBlockingQueue2.peek()).getName());
-        System.out.println(((Human)arrayBlockingQueue2.element()).getName());
+////        System.out.println(((Human)arrayBlockingQueue2.peek()).getName());
+//        System.out.println(((Human)arrayBlockingQueue2.element()).getName());
 
+        System.out.println(((Human)arrayBlockingQueue2.take()).getName());
+        System.out.println((Human)arrayBlockingQueue2.peek());
+//        System.out.println((Human)arrayBlockingQueue2.take());
+        System.out.println((Human)arrayBlockingQueue2.poll());
 
 
     }
