@@ -1,4 +1,4 @@
-package collection;
+package collection.queue.blocking;
 
 import java.util.AbstractQueue;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -8,12 +8,16 @@ import java.util.concurrent.ArrayBlockingQueue;
  * Date:2019/3/11
  * Time:21:33
  */
-public class Queue {
+public class ArrayBlockingQueueTest {
 
     public static ArrayBlockingQueue arrayBlockingQueue1 = new ArrayBlockingQueue(3);
     public static ArrayBlockingQueue arrayBlockingQueue2 = new ArrayBlockingQueue(3);
 
     public static void main(String[] args)throws Exception {
+        //在构造时需要指定容量， 并可以选择是否需要公平性，如果公平参数被设置true，等待时间最长的线程会优先得到处理
+        // （其实就是通过将ReentrantLock设置为true来 达到这种公平性的：即等待时间最长的线程会先操作）。
+        // 通常，公平性会使你在性能上付出代价，只有在的确非常需要的时候再使用它。它是基于数组的阻塞循环队列，
+        // 此队列按 FIFO（先进先出）原则对元素进行排序
 //        ArrayBlockingQueue arrayBlockingQueue = new ArrayBlockingQueue(3);
 //        for (int i=0; i<4; i++){
 ////            arrayBlockingQueue.add(i);
