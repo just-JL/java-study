@@ -11,6 +11,18 @@ peek       返回队列头部的元素           如果队列为空，则返回n
 put        添加一个元素                如果队列满，则阻塞
 take       移除并返回队列头部的元素     如果队列为空，则阻塞
 
+## 基础元素
+
+**AbstractQueue**：add、remove、element、clear、addAll
+
+**BlockingQueue**：add、offer、put、take、poll、remove
+
+**TransferQueue extends BlockingQueue**：tryTransfer、transfer
+
+
+
+**ReentrantLock**
+
 
 
 **链表**
@@ -33,3 +45,46 @@ https://blog.csdn.net/zhaobo012387/article/details/60869259
 
 https://blog.csdn.net/u013309870/article/details/77658224（参考jvm内存模型）
 
+## 阻塞队列
+
+**ArrayBlockingQueue**：AbstractQueue、BlockingQueue
+
+**LinkedBlockingQueue**：AbstractQueue、BlockingQueue
+
+**LinkedBlockingDeque**：AbstractQueue、BlockingQueue
+
+**LinkedTransferQueue**：AbstractQueue、TransferQueue
+
+**PriorityBlockingQueue**：AbstractQueue、BlockingQueue
+
+**SynchronousQueue**：AbstractQueue、BlockingQueue（使用cas保证安全性，其余阻塞队列均使用了ReentrantLock）
+
+**DelayQueue**：AbstractQueue、BlockingQueue、Delayed
+
+
+
+LinkedTransferQueue：https://kkewwei.github.io/elasticsearch_learning/2018/12/15/LinkedTransferQueue%E5%8E%9F%E7%90%86%E8%A7%A3%E8%AF%BB/
+
+LinkedTransferQueue不仅实现了普通BlockingQueue的功能, 另一个优点就是: 当有消费者等待数据时, 生产者可以直接将数据交给消费者而不是再进入队列。 与LinkedBlockingQueue相比, LinkedBlockingQueue在take和put操作时, 都是通过lock来控制, 当高并发操作take和put操作, 锁的获取和释放都是比较影响性能的。 而LinkedTransferQueue对这种使用进行了改进, 当生产者存放数据时, 发现有消费者等待消费数据, 生产者可以调用transfer直接将数据交给消费者, 而不用通过阻塞队列来传递数据, 减少了锁的释放与获取。
+
+
+
+DelayQueue：https://www.cnblogs.com/wxgblogs/p/5464867.html
+
+DelayQueue是一个无界阻塞队列，只有在延迟期满时才能从中提取元素。该队列的头部是延迟期满后保存时间最长的Delayed 元素。
+
+　　DelayQueue阻塞队列在我们系统开发中也常常会用到，例如：缓存系统的设计，缓存中的对象，超过了空闲时间，需要从缓存中移出；任务调度系统，能够准确的把握任务的执行时间。我们可能需要通过线程处理很多时间上要求很严格的数据，如果使用普通的线程，我们就需要遍历所有的对象，一个一个的检 查看数据是否过期等，首先这样在执行上的效率不会太高，其次就是这种设计的风格也大大的影响了数据的精度。一个需要12:00点执行的任务可能12:01 才执行,这样对数据要求很高的系统有更大的弊端。由此我们可以使用DelayQueue。
+
+## 非阻塞队列
+
+**ConcurrentLinkedQueue**：AbstractQueue、Queue
+
+**PriorityQueue**：AbstractQueue
+
+
+
+PriorityQueue：https://www.cnblogs.com/Elliott-Su-Faith-change-our-life/p/7472265.html
+
+**优先队列的作用是能保证每次取出的元素都是队列中权值最小的**（Java的优先队列每次取最小元素，C++的优先队列每次取最大元素）。这里牵涉到了大小关系，**元素大小的评判可以通过元素本身的自然顺序（natural ordering），也可以通过构造时传入的比较器**（*Comparator*，类似于C++的仿函数）。
+
+Java中*PriorityQueue*实现了*Queue*接口，不允许放入`null`元素；其通过堆实现，具体说是通过完全二叉树（*complete binary tree*）实现的**小顶堆**（任意一个非叶子节点的权值，都不大于其左右子节点的权值），也就意味着可以通过数组来作为*PriorityQueue*的底层实现
