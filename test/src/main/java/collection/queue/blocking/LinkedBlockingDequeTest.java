@@ -9,13 +9,18 @@ import java.util.concurrent.LinkedBlockingDeque;
  */
 public class LinkedBlockingDequeTest {
 
-    public static void main(String[] args) {
-        //这是一个只能一端出一端如的单向队列结构，是有FIFO特性的，并且是通过两个ReentrantLock和两个Condition来实现的
+    public static void main(String[] args) throws Exception{
+        //这是一个只能一端出一端入的单向队列结构，是有FIFO特性的，并且是通过两个ReentrantLock和两个Condition来实现的
         LinkedBlockingDeque linkedBlockingDeque = new LinkedBlockingDeque();
 
         linkedBlockingDeque.offer(1);
         linkedBlockingDeque.offer("jl");
 
         System.out.println(linkedBlockingDeque.toString());
+        linkedBlockingDeque.offerFirst("2");
+        System.out.println(linkedBlockingDeque.toString());
+        linkedBlockingDeque.takeLast();
+        System.out.println(linkedBlockingDeque.toString());
+
     }
 }
