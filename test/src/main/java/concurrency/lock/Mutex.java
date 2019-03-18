@@ -1,4 +1,4 @@
-package lock;
+package concurrency.lock;
 
 import java.util.concurrent.locks.AbstractQueuedSynchronizer;
 

@@ -1,4 +1,4 @@
-package threadpool;
+package concurrency.threadpool;
 
 /**
  * @author jiliang

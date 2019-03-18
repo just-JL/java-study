@@ -1,4 +1,4 @@
-package threadlocal;
+package concurrency.threadlocal;
 
 /**
  * @author jiliang

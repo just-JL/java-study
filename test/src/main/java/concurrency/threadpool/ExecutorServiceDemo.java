@@ -1,4 +1,4 @@
-package threadpool;
+package concurrency.threadpool;
 
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
