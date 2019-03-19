@@ -35,15 +35,15 @@ public class ThreadSafe extends Thread {
 
 > 详见：[Java内存模型以及happens-before规则](https://juejin.im/post/5ae6d309518825673123fd0e)
 
-**JMM**：
+## 2.1 JMM
 
 ![](https://user-gold-cdn.xitu.io/2018/4/30/16315b2410a9e3eb?imageView2/0/w/1280/h/960/format/webp/ignore-error/1)
 
-**重排序**：
+## 2.2 重排序
 
 ![](https://user-gold-cdn.xitu.io/2018/4/30/16315b2b7b2a63e9?imageView2/0/w/1280/h/960/format/webp/ignore-error/1)
 
-**happens-before**：
+## 2.3 happens-before
 
 - 程序顺序规则：一个线程中的每个操作，happens-before于该线程中的任意后续操作。
 
@@ -63,13 +63,51 @@ public class ThreadSafe extends Thread {
 
 # 三、并发关键字
 
+## 3.1 synchronized
 
+[synchronized简介与优化](https://juejin.im/post/5ae6dc04f265da0ba351d3ff#heading-14)
 
+### 3.1.1 实现
 
+![](https://user-gold-cdn.xitu.io/2018/4/30/16315cc79aaac173?imageView2/0/w/1280/h/960/format/webp/ignore-error/1)
 
+### 3.1.2 对象锁（monitor）机制
 
+```java
+public class SynchronizedDemo {
+    public static void main(String[] args) {
+        synchronized (SynchronizedDemo.class) {
+        }
+        method();
+    }
 
+    private static void method() {
+    }
+}
 
+```
+
+``javac``后使用``javap -v SynchronizedDemo.class``，查看字节码文件。
+
+![](https://user-gold-cdn.xitu.io/2018/4/30/16315cce259af0d2?imageView2/0/w/1280/h/960/format/webp/ignore-error/1)
+
+执行同步代码块后首先要先执行**monitorenter**指令，退出的时候**monitorexit**指令。执行静态同步方法的时候就只有一条monitorexit指令，并没有monitorenter获取锁的指令。这就是**锁的重入性**，即在同一锁程中，线程不需要再次获取同一把锁。Synchronized先天具有重入性。**每个对象拥有一个计数器，当线程获取该对象锁后，计数器就会加一，释放锁后就会将计数器减一**。
+
+### 3.1.3 优化
+
+[优化](https://www.cnblogs.com/paddix/p/5405678.html)
+
+问题：synchronized在同一时刻只有一个线程能够获得对象的监视器（monitor），从而进入到同步代码块或者同步方法之中，即表现为**互斥性（排它性）**。这种方式肯定效率低下，每次只能通过一个线程。
+
+方案：使用轻量级锁和偏向锁对synchronized进行优化，减少获得锁和释放锁所带来的性能消耗
+
+| 锁       | 优点                                                         | 缺点                                             | 适用场景                             |
+| -------- | ------------------------------------------------------------ | ------------------------------------------------ | ------------------------------------ |
+| 偏向锁   | 加锁和解锁不需要额外的消耗，和执行非同步方法比仅存在纳秒级的差距。 | 如果线程间存在锁竞争，会带来额外的锁撤销的消耗。 | 适用于只有一个线程访问同步块场景。   |
+| 轻量级锁 | 竞争的线程不会阻塞，提高了程序的响应速度。                   | 如果始终得不到锁竞争的线程使用自旋会消耗CPU。    | 追求响应时间。同步块执行速度非常快。 |
+| 重量级锁 | 线程竞争不使用自旋，不会消耗CPU。                            | 线程阻塞，响应时间缓慢。                         | 追求吞吐量。同步块执行速度较长。     |
+
+> 锁的状态总共有四种：无锁状态、偏向锁、轻量级锁和重量级锁。随着锁的竞争，锁可以从偏向锁升级到轻量级锁，再升级的重量级锁（但是锁的升级是单向的，也就是说只能从低到高升级，不会出现锁的降级）。JDK 1.6中默认是开启偏向锁和轻量级锁的，我们也可以通过-XX:-UseBiasedLocking来禁用偏向锁
 
 
 
