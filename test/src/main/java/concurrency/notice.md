@@ -111,6 +111,8 @@ public class SynchronizedDemo {
 
 ## 3.2 volatile
 
+[彻底理解volatile](https://juejin.im/post/5ae9b41b518825670b33e6c4#heading-3)
+
 ### 3.2.1 实现原理
 
 在生成汇编代码时会在volatile修饰的共享变量进行写操作的时候会多出**Lock前缀的指令**，作用如下：
@@ -137,6 +139,8 @@ public class SynchronizedDemo {
 ![](https://user-gold-cdn.xitu.io/2018/5/2/16320e799b76d34c?imageView2/0/w/1280/h/960/format/webp/ignore-error/1)
 
 ### 3.2.3 为什么不能保证原子性
+
+详见：[为什么volatile不能保证原子性](https://www.cnblogs.com/rainwang/p/4398488.html)
 
 **volatile可以保证可见性，但不能保证原子性。**
 
