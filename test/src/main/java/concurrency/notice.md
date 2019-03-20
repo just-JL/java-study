@@ -142,7 +142,7 @@ public class SynchronizedDemo {
 
 详见：[为什么volatile不能保证原子性](https://www.cnblogs.com/rainwang/p/4398488.html)
 
-**volatile可以保证可见性，但不能保证原子性。**
+**volatile可以保证可见性和有序性，但不能保证原子性。**
 
 原因：
 
