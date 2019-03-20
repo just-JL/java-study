@@ -109,21 +109,49 @@ public class SynchronizedDemo {
 
 > 锁的状态总共有四种：无锁状态、偏向锁、轻量级锁和重量级锁。随着锁的竞争，锁可以从偏向锁升级到轻量级锁，再升级的重量级锁（但是锁的升级是单向的，也就是说只能从低到高升级，不会出现锁的降级）。JDK 1.6中默认是开启偏向锁和轻量级锁的，我们也可以通过-XX:-UseBiasedLocking来禁用偏向锁
 
+## 3.2 volatile
 
+### 3.2.1 实现原理
 
+在生成汇编代码时会在volatile修饰的共享变量进行写操作的时候会多出**Lock前缀的指令**，作用如下：
 
+1. 将当前处理器缓存行的数据写回系统内存；
+2. 这个写回内存的操作会使得其他CPU里缓存了该内存地址的数据无效
 
+### 3.2.2 volatile的内存语义实现
 
+为了性能优化，JMM在不改变正确语义的前提下，会允许编译器和处理器对指令序列进行重排序，那如果想阻止重排序要怎么办了？答案是可以添加**内存屏障**。
 
+![](https://user-gold-cdn.xitu.io/2018/5/2/16320e796e1471c0?imageView2/0/w/1280/h/960/format/webp/ignore-error/1)
 
+**StoreStore屏障**：禁止上面的普通写和下面的volatile写重排序；
 
+**StoreLoad屏障**：防止上面的volatile写与下面可能有的volatile读/写重排序
 
+**LoadLoad屏障**：禁止下面所有的普通读操作和上面的volatile读重排序
 
+**LoadStore屏障**：禁止下面所有的普通写操作和上面的volatile读重排序
 
+![](https://user-gold-cdn.xitu.io/2018/5/2/16320e796e03b351?imageView2/0/w/1280/h/960/format/webp/ignore-error/1)
 
+![](https://user-gold-cdn.xitu.io/2018/5/2/16320e799b76d34c?imageView2/0/w/1280/h/960/format/webp/ignore-error/1)
 
+### 3.2.3 为什么不能保证原子性
 
+**volatile可以保证可见性，但不能保证原子性。**
 
+原因：
+
+例如你让一个volatile的integer自增（i++），其实要分成3步：1）读取volatile变量值到local； 2）增加变量的值；3）把local的值写回，让其它的线程可见。这3步的jvm指令为：
+
+```
+mov        0xc(%r10),%r8d ; Load
+inc        %r8d           ; Increment
+mov    %r8d,``0xc``(%r10) ; Store
+lock addl $``0x0``,(%rsp) ; StoreLoad Barrier
+```
+
+从Load到store到内存屏障，一共4步，其中最后一步jvm让这个最新的变量的值在所有线程可见，也就是最后一步让所有的CPU内核都获得了最新的值，但**中间的几步（从Load到Store）**是不安全的，中间如果其他的CPU修改了值将会丢失。所以为了保证原子性，需要对**Increment**，加锁(synchronized或lock)或使用原子类**AtomicXXX**。
 
 
 
