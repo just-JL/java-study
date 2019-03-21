@@ -157,11 +157,22 @@ lock addl $``0x0``,(%rsp) ; StoreLoad Barrier
 
 从Load到store到内存屏障，一共4步，其中最后一步jvm让这个最新的变量的值在所有线程可见，也就是最后一步让所有的CPU内核都获得了最新的值，但**中间的几步（从Load到Store）**是不安全的，中间如果其他的CPU修改了值将会丢失。所以为了保证原子性，需要对**Increment**，加锁(synchronized或lock)或使用原子类**AtomicXXX**。
 
+## 3.3 final
 
+[你以为你真的了解final吗](https://juejin.im/post/5ae9b82c6fb9a07ac3634941)
 
+[final和线程安全](http://www.cnblogs.com/mianlaoshu/articles/3648403.html)
 
+看了还是不了解~~，只是对成员变量（static修饰的类变量、实例变量）、局部变量，final的基础使用加深了印象。
 
+硬着头皮总结几点：
 
+- 当构造函数结束时，final类型的值是被保证其他线程访问该对象时，它们的值是可见的，若没有用final修饰，则会进行重排序。
+- 在构造函数，不能让这个被构造的对象被其他线程可见，也就是说该对象引用不能在构造函数中“逸出”。
+
+>Q：如何不使用任何锁，任何线程安全的容器怎么实现线程安全
+>
+>A：使用volatile和cas 或其他？（思路：参考线程安全容器底层实现？）
 
 
 
