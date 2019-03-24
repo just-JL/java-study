@@ -174,6 +174,138 @@ lock addl $``0x0``,(%rsp) ; StoreLoad Barrier
 >
 >A：使用volatile和cas 或其他？（思路：参考线程安全容器底层实现？）
 
+# 四、Lock体系
+
+从整体上来看concurrent包的整体实现图如下图所示：
+
+![](https://user-gold-cdn.xitu.io/2018/5/3/163260cff7cb847c?imageView2/0/w/1280/h/960/format/webp/ignore-error/1)
+
+## 4.1 AQS
+
+[深入理解AbstractQueuedSynchronizer(AQS)](https://juejin.im/post/5aeb07ab6fb9a07ac36350c8#heading-3)
+
+使用的数据结构是：具有**头结点的双向链表**
+
+AQS的核心包括了这些方面:
+
+**同步队列，独占式锁的获取和释放，共享锁的获取和释放以及可中断锁，超时等待锁获取这些特性的实现**。
+
+### 4.1.1 同步队列
+
+1. 节点的数据结构，即AQS的静态内部类Node,节点的等待状态等信息；
+2. 同步队列是一个双向队列，AQS通过持有头尾指针管理同步队列；
+
+节点的入队出队对应着锁的获取和释放两个操作：获取锁失败进行入队操作，获取锁成功进行出队操作
+
+### 4.1.2 独占锁
+
+#### 4.1.2.1 独占锁获取（acquire方法）
+
+1. 在当前线程是第一个加入同步队列时，调用compareAndSetHead(new Node())方法，完成链式队列的头结点的初始化；
+2. 自旋不断尝试CAS尾插入节点直至成功为止。
+3. 如果先驱节点是头结点的并且成功获得同步状态的时候（if (p == head && tryAcquire(arg))），当前节点所指向的线程能够获取锁，否则线程进入等待状态等待获取独占式锁
+
+![](https://user-gold-cdn.xitu.io/2018/5/3/163261637c891cc2?imageView2/0/w/1280/h/960/format/webp/ignore-error/1)
+
+#### 4.1.2.2 独占锁释放（release()方法）
+
+​	首先获取头节点的后继节点，当后继节点的时候会调用LookSupport.unpark()方法，该方法会唤醒该节点的后继节点所包装的线程。因此，**每一次锁释放后就会唤醒队列中该节点的后继节点所引用的线程，从而进一步可以佐证获得锁的过程是一个FIFO（先进先出）的过程**
+
+#### 4.1.2.3 可中断式获取锁（acquireInterruptibly方法）， 超时等待式获取锁（tryAcquireNanos()方法）
+
+略
+
+### 4.1.3 共享锁
+
+#### 4.1.3.1 共享锁获取
+
+略
+
+#### 4.1.3.2 共享锁释放
+
+略
+
+#### 4.1.3.3 可中断（acquireSharedInterruptibly()方法），超时等待（tryAcquireSharedNanos()方法）
+
+略
+
+## 4.2 ReentrantLock
+
+[彻底理解ReentrantLock](https://juejin.im/post/5aeb0a8b518825673a2066f0)
+
+​	ReentrantLock重入锁，是实现Lock接口的一个类，也是在实际编程中使用频率很高的一个锁，**支持重入性，表示能够对共享资源能够重复加锁，即当前线程获取该锁再次获取不会被阻塞**。在java关键字synchronized隐式支持重入性，synchronized通过获取自增，释放自减的方式实现重入。与此同时，ReentrantLock还支持**公平锁和非公平锁**两种方式。
+
+1. 重入性的实现原理；
+
+   ```java
+   final boolean nonfairTryAcquire(int acquires) {
+       final Thread current = Thread.currentThread();
+       int c = getState();
+       //1. 如果该锁未被任何线程占有，该锁能被当前线程获取
+   	if (c == 0) {
+           if (compareAndSetState(0, acquires)) {
+               setExclusiveOwnerThread(current);
+               return true;
+           }
+       }
+   	//2.若被占有，检查占有线程是否是当前线程
+       else if (current == getExclusiveOwnerThread()) {
+   		// 3. 再次获取，计数加一
+           int nextc = c + acquires;
+           if (nextc < 0) // overflow
+               throw new Error("Maximum lock count exceeded");
+           setState(nextc);
+           return true;
+       }
+       return false;
+   }
+   
+   ```
+
+2.  公平锁和非公平锁。
+
+   **公平锁每次都是从同步队列中的第一个节点获取到锁，而非公平性锁则不一定，有可能刚释放锁的线程能再次获取到锁**。
+
+   > ​	a.公平锁每次获取到锁为同步队列中的第一个节点，**保证请求资源时间上的绝对顺序**，而非公平锁有可能刚释放锁的线程下次继续获取该锁，则有可能导致其他线程永远无法获取到锁，**造成“饥饿”现象**。
+   >
+   > ​	b.公平锁为了保证时间上的绝对顺序，需要频繁的上下文切换，而非公平锁会降低一定的上下文切换，降低性能开销。因此，ReentrantLock默认选择的是非公平锁，则是为了减少一部分上下文切换，**保证了系统更大的吞吐量**。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
