@@ -172,7 +172,7 @@ lock addl $``0x0``,(%rsp) ; StoreLoad Barrier
 
 >Q：如何不使用任何锁，任何线程安全的容器怎么实现线程安全
 >
->A：使用volatile和cas 或其他？（思路：参考线程安全容器底层实现？）
+>A：使用volatile+cas+队列 或其他？（思路：AQS？参考线程安全容器底层实现？）
 
 # 四、Lock体系
 
@@ -270,21 +270,155 @@ AQS的核心包括了这些方面:
    >
    > ​	b.公平锁为了保证时间上的绝对顺序，需要频繁的上下文切换，而非公平锁会降低一定的上下文切换，降低性能开销。因此，ReentrantLock默认选择的是非公平锁，则是为了减少一部分上下文切换，**保证了系统更大的吞吐量**。
 
+## 4.3 ReentrantReadWriteLock
+
+[深入理解读写锁ReentrantReadWriteLock](https://juejin.im/post/5aeb0e016fb9a07ab7740d90)
+
+1. 读写锁是怎样实现分别记录读写状态的？
+
+   ![](https://user-gold-cdn.xitu.io/2018/5/3/163262ec97ebeac9?imageView2/0/w/1280/h/960/format/webp/ignore-error/1)
+
+2.  写锁是怎样获取和释放的？
+
+   独占锁
+
+3. 读锁是怎样获取和释放的？
+
+   共享锁
+
+> 支持锁降级，**遵循按照获取写锁，获取读锁再释放写锁的次序，写锁能够降级成为读锁**，不支持锁升级
+
+## 4.4 Condition
+
+AQS中的ConditionObject：底层数据结构是没有头结点的单向链表
+
+### 4.4.1 等待队列
+
+等待队列的示意图如下：
+
+![](https://user-gold-cdn.xitu.io/2018/5/6/16334382e58c4e34?imageView2/0/w/1280/h/960/format/webp/ignore-error/1)
 
 
 
+​	可以多次调用lock.newCondition()方法创建多个condition对象，也就是一个lock可以持有多个等待队列。而在之前利用Object的方式实际上是指在**对象Object对象监视器上只能拥有一个同步队列和一个等待队列，而并发包中的Lock拥有一个同步队列和多个等待队列**。示意图如下：
 
+![](https://user-gold-cdn.xitu.io/2018/5/6/16334382e65f9685?imageView2/0/w/1280/h/960/format/webp/ignore-error/1)
 
+### 4.4.2 await实现原理
 
+```java
+public final void await() throws InterruptedException {
+    if (Thread.interrupted())
+        throw new InterruptedException();
+	// 1. 将当前线程包装成Node，尾插入到等待队列中
+    Node node = addConditionWaiter();
+	// 2. 释放当前线程所占用的lock，在释放的过程中会唤醒同步队列中的下一个节点
+    int savedState = fullyRelease(node);
+    int interruptMode = 0;
+    while (!isOnSyncQueue(node)) {
+		// 3. 当前线程进入到等待状态
+        LockSupport.park(this);
+        if ((interruptMode = checkInterruptWhileWaiting(node)) != 0)
+            break;
+    }
+	// 4. 自旋等待获取到同步状态（即获取到lock）
+    if (acquireQueued(node, savedState) && interruptMode != THROW_IE)
+        interruptMode = REINTERRUPT;
+    if (node.nextWaiter != null) // clean up if cancelled
+        unlinkCancelledWaiters();
+	// 5. 处理被中断的情况
+    if (interruptMode != 0)
+        reportInterruptAfterWait(interruptMode);
+}
 
+```
 
+![](https://user-gold-cdn.xitu.io/2018/5/6/16334382e74cead3?imageView2/0/w/1280/h/960/format/webp/ignore-error/1)
 
+### 4.4.3 signal/signalAll实现原理
 
+#### 4.4.3.1 signal
 
+```java
+public final void signal() {
+    //1. 先检测当前线程是否已经获取lock
+    if (!isHeldExclusively())
+        throw new IllegalMonitorStateException();
+    //2. 获取等待队列中第一个节点，之后的操作都是针对这个节点
+	Node first = firstWaiter;
+    if (first != null)
+        doSignal(first);
+}
 
+```
 
+signal方法首先会检测当前线程是否已经获取lock，如果没有获取lock会直接抛出异常，如果获取的话再得到等待队列的头指针引用的节点，之后的操作的doSignal方法也是基于该节点。下面我们来看看doSignal方法做了些什么事情，doSignal方法源码为：
 
+```java
+private void doSignal(Node first) {
+    do {
+        if ( (firstWaiter = first.nextWaiter) == null)
+            lastWaiter = null;
+		//1. 将头结点从等待队列中移除
+        first.nextWaiter = null;
+		//2. while中transferForSignal方法对头结点做真正的处理
+    } while (!transferForSignal(first) &&
+             (first = firstWaiter) != null);
+}
 
+```
+
+```java
+final boolean transferForSignal(Node node) {
+    /*
+     * If cannot change waitStatus, the node has been cancelled.
+     */
+	//1. 更新状态为0
+    if (!compareAndSetWaitStatus(node, Node.CONDITION, 0))
+        return false;
+
+    /*
+     * Splice onto queue and try to set waitStatus of predecessor to
+     * indicate that thread is (probably) waiting. If cancelled or
+     * attempt to set waitStatus fails, wake up to resync (in which
+     * case the waitStatus can be transiently and harmlessly wrong).
+     */
+	//2.将该节点移入到同步队列中去
+    Node p = enq(node);
+    int ws = p.waitStatus;
+    if (ws > 0 || !compareAndSetWaitStatus(p, ws, Node.SIGNAL))
+        LockSupport.unpark(node.thread);
+    return true;
+}
+
+```
+
+​	**调用condition的signal的前提条件是当前线程已经获取了lock，该方法会使得等待队列中的头节点即等待时间最长的那个节点移入到同步队列，而移入到同步队列后才有机会使得等待线程被唤醒，即从await方法中的LockSupport.park(this)方法中返回，从而才有机会使得调用await方法的线程成功退出**。signal执行示意图如下图：
+
+![](https://user-gold-cdn.xitu.io/2018/5/6/16334382e7650d62?imageView2/0/w/1280/h/960/format/webp/ignore-error/1)
+
+#### 4.4.3.2 signalAll
+
+```java
+private void doSignalAll(Node first) {
+    lastWaiter = firstWaiter = null;
+    do {
+        Node next = first.nextWaiter;
+        first.nextWaiter = null;
+        transferForSignal(first);
+        first = next;
+    } while (first != null);
+}
+
+```
+
+#### 4.4.3.3 await与signal/signalAll的结合思考
+
+![](https://user-gold-cdn.xitu.io/2018/5/6/16334382e7911395?imageView2/0/w/1280/h/960/format/webp/ignore-error/1)
+
+## 4.5 LockSupport
+
+[LockSupport工具](https://juejin.im/post/5aeed27f51882567336aa0fa)
 
 
 
