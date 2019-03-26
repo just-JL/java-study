@@ -420,11 +420,38 @@ private void doSignalAll(Node first) {
 
 [LockSupport工具](https://juejin.im/post/5aeed27f51882567336aa0fa)
 
+# 五、并发容器
+
+## 5.1 ConcurrentHashmap
+
+[并发容器之ConcurrentHashMap(JDK 1.8版本)](https://juejin.im/post/5aeeaba8f265da0b9d781d16#heading-7)
+
+[深入分析ConcurrentHashMap1.8的扩容实现](https://www.jianshu.com/p/f6730d5784ad)
+
+导致扩容两种原因：
+
+1. 新增节点之后，所在链表的元素个数达到了阈值 **8**，则会调用`treeifyBin`方法把链表转换成红黑树，不过在结构转换之前，会对数组长度进行判断：如果数组长度n小于阈值`MIN_TREEIFY_CAPACITY`，默认是64，则会调用`tryPresize`方法把数组长度扩大到原来的两倍，并触发`transfer`方法，重新调整节点的位置。
+2. 新增节点之后，会调用`addCount`方法记录元素个数，并检查是否需要进行扩容，当数组元素个数达到阈值时，会触发`transfer`方法，重新调整节点的位置。
+
+put和扩容可以同时进行，put后可以再进行扩容
 
 
 
+**五种构造器：**
 
+```java
+// 1. 构造一个空的map，即table数组还未初始化，初始化放在第一次插入数据时，默认大小为16
+ConcurrentHashMap()
+// 2. 给定map的大小
+ConcurrentHashMap(int initialCapacity) 
+// 3. 给定一个map
+ConcurrentHashMap(Map<? extends K, ? extends V> m)
+// 4. 给定map的大小以及加载因子
+ConcurrentHashMap(int initialCapacity, float loadFactor)
+// 5. 给定map大小，加载因子以及并发度（预计同时操作数据的线程）
+ConcurrentHashMap(int initialCapacity,float loadFactor, int concurrencyLevel)
 
+```
 
 
 
