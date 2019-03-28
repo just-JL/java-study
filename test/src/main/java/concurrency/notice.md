@@ -542,7 +542,18 @@ CopyOnWrite容器有很多优点，但是同时也存在两个问题，即内存
 
 [并发容器之ConcurrentLinkedQueue](https://juejin.im/post/5aeeae756fb9a07ab11112af#heading-3)
 
+## 5.4 ThreadLocal
 
+[并发容器之ThreadLocal](https://juejin.im/post/5aeeb22e6fb9a07aa213404a)
+
+[一篇文章，从源码深入详解ThreadLocal内存泄漏问题](https://www.jianshu.com/p/dde92ec37bd1)
+
+![](https://user-gold-cdn.xitu.io/2018/5/6/16334681776bb805?imageView2/0/w/1280/h/960/format/webp/ignore-error/1)
+
+- 弱引用：ThreadLocal使用弱引用包装，用于gc，若使用强引用，通过可达性分析，通过ThreadLocalMap的value值可以找到key值ThreadLocal，即使key为null，回收不了，造成内存溢出
+- hash：**ThreadLocalMap 中使用开放地址法来处理散列冲突**，而 HashMap 中使用的分离链表法。之所以采用不同的方式主要是因为：在 ThreadLocalMap 中的散列值分散的十分均匀，很少会出现冲突。并且 ThreadLocalMap 经常需要清除无用的对象，使用纯数组更加方便。hash值实际上总是用一个AtomicInteger加上0x61c88647来实现的。
+- 清除脏Entry：value=null，entry==null，伴随threadLocal的set、get、remove
+- 防止内存泄漏：使用完后调用remove方法释放
 
 
 
