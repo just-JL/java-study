@@ -1,3 +1,5 @@
+[并发总结](https://github.com/CL0610/Java-concurrency)
+
 # 一、基础知识
 
 **线程生命周期**：
@@ -433,7 +435,7 @@ private void doSignalAll(Node first) {
 1. 新增节点之后，所在链表的元素个数达到了阈值 **8**，则会调用`treeifyBin`方法把链表转换成红黑树，不过在结构转换之前，会对数组长度进行判断：如果数组长度n小于阈值`MIN_TREEIFY_CAPACITY`，默认是64，则会调用`tryPresize`方法把数组长度扩大到原来的两倍，并触发`transfer`方法，重新调整节点的位置。
 2. 新增节点之后，会调用`addCount`方法记录元素个数，并检查是否需要进行扩容，当数组元素个数达到阈值时，会触发`transfer`方法，重新调整节点的位置。
 
-put和扩容可以同时进行，put后可以再进行扩容
+put时如果正在扩容，则该线程阻塞帮助扩容；put后可能进行扩容。
 
 
 
@@ -453,9 +455,92 @@ ConcurrentHashMap(int initialCapacity,float loadFactor, int concurrencyLevel)
 
 ```
 
+## 5.2 CopyOnWriteArrayList
+
+[并发容器之CopyOnWriteArrayList](https://juejin.im/post/5aeeb55f5188256715478c21)
+
+```java
+/** The array, accessed only via getArray/setArray. */
+private transient volatile Object[] array;
+```
+
+该数组引用是被volatile修饰，注意这里**仅仅是修饰的是数组引用**
 
 
 
+**get方法：**
+
+```java
+public E get(int index) {
+    return get(getArray(), index);
+}
+/**
+ * Gets the array.  Non-private so as to also be accessible
+ * from CopyOnWriteArraySet class.
+ */
+final Object[] getArray() {
+    return array;
+}
+private E get(Object[] a, int index) {
+    return (E) a[index];
+}
+
+```
+
+读线程只是会读取数据容器中的数据，并不会进行修改，所以不用加锁。
+
+
+
+**add方法：**
+
+```java
+public boolean add(E e) {
+    final ReentrantLock lock = this.lock;
+	//1. 使用Lock,保证写线程在同一时刻只有一个
+    lock.lock();
+    try {
+		//2. 获取旧数组引用
+        Object[] elements = getArray();
+        int len = elements.length;
+		//3. 创建新的数组，并将旧数组的数据复制到新数组中
+        Object[] newElements = Arrays.copyOf(elements, len + 1);
+		//4. 往新数组中添加新的数据	        
+		newElements[len] = e;
+		//5. 将旧数组引用指向新的数组
+        setArray(newElements);
+        return true;
+    } finally {
+        lock.unlock();
+    }
+}
+```
+
+1. 采用ReentrantLock，保证同一时刻只有一个写线程正在进行数组的复制，否则的话内存中会有多份被复制的数据；
+
+2. 前面说过数组引用是volatile修饰的，因此将旧的数组引用指向新的数组，根据volatile的happens-before规则，写线程对数组引用的修改对读线程是可见的。
+
+3. 由于在写数据的时候，是在新的数组中插入数据的，从而保证读写实在两个不同的数据容器中进行操作。
+
+
+
+**COW  vs 读写锁**
+
+相同点：1. 两者都是通过读写分离的思想实现；2.读线程间是互不阻塞的
+
+不同点：**对读线程而言，为了实现数据实时性，在写锁被获取后，读线程会等待或者当读锁被获取后，写线程会等待，从而解决“脏读”等问题。也就是说如果使用读写锁依然会出现读线程阻塞等待的情况。而COW则完全放开了牺牲数据实时性而保证数据最终一致性，即读线程对数据的更新是延时感知的，因此读线程不会存在等待的情况**。
+
+
+
+**COW的缺点**
+
+CopyOnWrite容器有很多优点，但是同时也存在两个问题，即内存占用问题和数据一致性问题。所以在开发的时候需要注意一下。
+
+1. **内存占用问题**：因为CopyOnWrite的写时复制机制，所以在进行写操作的时候，内存里会同时驻扎两个对	象的内存，旧的对象和新写入的对象（注意:在复制的时候只是复制容器里的引用，只是在写的时候会创建新对	象添加到新容器里，而旧容器的对象还在使用，所以有两份对象内存）。如果这些对象占用的内存比较大，比	如说200M左右，那么再写入100M数据进去，内存就会占用300M，那么这个时候很有可能造成频繁的minor GC和major GC。
+2. **数据一致性问题**：CopyOnWrite容器只能保证数据的最终一致性，不能保证数据的实时一致性。所以如果你希望写入的的数据，马上能读到，请不要使用CopyOnWrite容器。
+
+## 5.3 ConcurrentLinkedQueue
+
+[并发容器之ConcurrentLinkedQueue](https://juejin.im/post/5aeeae756fb9a07ab11112af#heading-3)
 
 
 
