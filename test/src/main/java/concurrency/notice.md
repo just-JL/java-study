@@ -1,5 +1,9 @@
 [并发总结](https://github.com/CL0610/Java-concurrency)
 
+[面试题](https://segmentfault.com/a/1190000013813740)
+
+[15个顶级Java多线程面试题及回答](http://ifeve.com/15-java-faq/)
+
 # 一、基础知识
 
 **线程生命周期**：
