@@ -21,7 +21,7 @@ public class Producer {
  * 因为服务器会回查这个Group下的任意一个Producer
  */
         final DefaultMQProducer producer = new DefaultMQProducer("ProducerGroupName");
-        producer.setNamesrvAddr("127.0.0.1:9876");
+        producer.setNamesrvAddr("localhost:9876");
         producer.setInstanceName("Producer");
 
         /**
@@ -39,7 +39,7 @@ public class Producer {
         for (int i = 0; i < 10; i++) {
             try {
                 {
-                    Message msg = new Message("TopicTest1",// topic
+                    Message msg = new Message("TopicTest",// topic
                             "TagA",// tag
                             "OrderID001",// key
                             ("Hello MetaQA").getBytes());// body
@@ -47,23 +47,23 @@ public class Producer {
                     System.out.println(sendResult);
                 }
 
-                {
-                    Message msg = new Message("TopicTest2",// topic
-                            "TagB",// tag
-                            "OrderID0034",// key
-                            ("Hello MetaQB").getBytes());// body
-                    SendResult sendResult = producer.send(msg);
-                    System.out.println(sendResult);
-                }
-
-                {
-                    Message msg = new Message("TopicTest3",// topic
-                            "TagC",// tag
-                            "OrderID061",// key
-                            ("Hello MetaQC").getBytes());// body
-                    SendResult sendResult = producer.send(msg);
-                    System.out.println(sendResult);
-                }
+//                {
+//                    Message msg = new Message("TopicTest2",// topic
+//                            "TagB",// tag
+//                            "OrderID0034",// key
+//                            ("Hello MetaQB").getBytes());// body
+//                    SendResult sendResult = producer.send(msg);
+//                    System.out.println(sendResult);
+//                }
+//
+//                {
+//                    Message msg = new Message("TopicTest3",// topic
+//                            "TagC",// tag
+//                            "OrderID061",// key
+//                            ("Hello MetaQC").getBytes());// body
+//                    SendResult sendResult = producer.send(msg);
+//                    System.out.println(sendResult);
+//                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

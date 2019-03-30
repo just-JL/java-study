@@ -26,13 +26,13 @@ public class Consumer {
          */
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(
                 "ConsumerGroupName");
-        consumer.setNamesrvAddr("10.57.41.19:9876");
+        consumer.setNamesrvAddr("localhost:9876");
         consumer.setInstanceName("Consumber");
 
         /**
          * 订阅指定topic下tags分别等于TagA或TagC或TagD
          */
-        consumer.subscribe("TopicTest1", "TagA || TagC || TagD");
+        consumer.subscribe("TopicTest", "*");
         /**
          * 订阅指定topic下所有消息<br>
          * 注意：一个consumer对象可以订阅多个topic

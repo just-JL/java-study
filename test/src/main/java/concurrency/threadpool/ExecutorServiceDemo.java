@@ -17,6 +17,7 @@ public class ExecutorServiceDemo {
 
         NotThreadSafe notThreadSafe = new NotThreadSafe();
         NotThreadSafe notThreadSafe1 = new NotThreadSafe();
+        pool.execute(new MyRunnable(notThreadSafe));
 
         // 可以执行Runnable对象或者Callable对象代表的线程
         pool.submit(new MyRunnable(notThreadSafe));
