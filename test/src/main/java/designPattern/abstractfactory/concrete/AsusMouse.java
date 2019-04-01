@@ -1,6 +1,6 @@
-package designPattern.abstractfactory.concrete;
+package designpattern.abstractfactory.concrete;
 
-import designPattern.abstractfactory.framework.Mouse;
+import designpattern.abstractfactory.framework.Mouse;
 
 /**
  * author:jiliang

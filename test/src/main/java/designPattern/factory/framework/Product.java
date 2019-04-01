@@ -1,4 +1,4 @@
-package designPattern.factory.framework;
+package designpattern.factory.framework;
 
 /**
  * author:jiliang

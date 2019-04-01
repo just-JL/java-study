@@ -1,8 +1,8 @@
-package designPattern.factory;
+package designpattern.factory;
 
-import designPattern.factory.framework.Factory;
-import designPattern.factory.framework.Product;
-import designPattern.factory.idcard.IDCardFactory;
+import designpattern.factory.framework.Factory;
+import designpattern.factory.framework.Product;
+import designpattern.factory.idcard.IDCardFactory;
 
 /**
  * author:jiliang

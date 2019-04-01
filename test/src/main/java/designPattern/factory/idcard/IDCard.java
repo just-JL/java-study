@@ -1,6 +1,6 @@
-package designPattern.factory.idcard;
+package designpattern.factory.idcard;
 
-import designPattern.factory.framework.Product;
+import designpattern.factory.framework.Product;
 
 /**
  * author:jiliang

@@ -1,4 +1,4 @@
-package designPattern.observer;
+package designpattern.observer;
 
 /**
  * author:jiliang

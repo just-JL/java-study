@@ -1,7 +1,7 @@
-package designPattern.adapter.objectAdapter;
+package designpattern.adapter.objectAdapter;
 
 
-import designPattern.adapter.classAdapter.Banner;
+import designpattern.adapter.classAdapter.Banner;
 
 /**
  * author:jiliang

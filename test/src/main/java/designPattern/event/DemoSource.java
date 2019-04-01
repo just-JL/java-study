@@ -1,4 +1,4 @@
-package designPattern.event;
+package designpattern.event;
 
 import java.util.Enumeration;
 import java.util.Vector;

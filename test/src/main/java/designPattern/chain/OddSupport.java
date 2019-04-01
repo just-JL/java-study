@@ -1,4 +1,4 @@
-package designPattern.chain;
+package designpattern.chain;
 
 /**
  * @author:jiliang

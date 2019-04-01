@@ -1,4 +1,4 @@
-package designPattern.adapter.objectAdapter;
+package designpattern.adapter.objectAdapter;
 
 /**
  * author:jiliang

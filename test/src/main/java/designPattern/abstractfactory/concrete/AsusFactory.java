@@ -1,8 +1,8 @@
-package designPattern.abstractfactory.concrete;
+package designpattern.abstractfactory.concrete;
 
-import designPattern.abstractfactory.framework.Keyboard;
-import designPattern.abstractfactory.framework.Mouse;
-import designPattern.abstractfactory.framework.PcFactory;
+import designpattern.abstractfactory.framework.Keyboard;
+import designpattern.abstractfactory.framework.Mouse;
+import designpattern.abstractfactory.framework.PcFactory;
 
 /**
  * author:jiliang

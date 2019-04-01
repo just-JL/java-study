@@ -1,6 +1,6 @@
-package designPattern.abstractfactory.concrete;
+package designpattern.abstractfactory.concrete;
 
-import designPattern.abstractfactory.framework.Keyboard;
+import designpattern.abstractfactory.framework.Keyboard;
 
 /**
  * author:jiliang

@@ -1,4 +1,4 @@
-package designPattern.event;
+package designpattern.event;
 
 /**
  * author:jiliang

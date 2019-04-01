@@ -1,9 +1,9 @@
-package designPattern.abstractfactory;
+package designpattern.abstractfactory;
 
-import designPattern.abstractfactory.concrete.AsusFactory;
-import designPattern.abstractfactory.concrete.DellFactory;
-import designPattern.abstractfactory.framework.Keyboard;
-import designPattern.abstractfactory.framework.Mouse;
+import designpattern.abstractfactory.concrete.AsusFactory;
+import designpattern.abstractfactory.concrete.DellFactory;
+import designpattern.abstractfactory.framework.Keyboard;
+import designpattern.abstractfactory.framework.Mouse;
 
 /**
  * author:jiliang

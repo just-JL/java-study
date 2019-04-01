@@ -1,4 +1,4 @@
-package designPattern.adapter.classAdapter;
+package designpattern.adapter.classAdapter;
 
 /**
  * author:jiliang

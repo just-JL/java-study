@@ -1,8 +1,7 @@
-package designPattern.factory.idcard;
+package designpattern.factory.idcard;
 
-import designPattern.factory.framework.Factory;
-import designPattern.factory.framework.Product;
-import designPattern.factory.idcard.IDCard;
+import designpattern.factory.framework.Factory;
+import designpattern.factory.framework.Product;
 
 import java.util.ArrayList;
 import java.util.List;
