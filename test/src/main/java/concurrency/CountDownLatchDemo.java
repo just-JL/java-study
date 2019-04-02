@@ -17,15 +17,18 @@ public class CountDownLatchDemo {
     public static void main(String[] args) throws InterruptedException {
         ExecutorService executorService = Executors.newFixedThreadPool(6);
         for (int i = 0; i < 6; i++) {
-            executorService.execute(() -> {
-                try {
-                    System.out.println(Thread.currentThread().getName() + " 运动员等待裁判员响哨！！！");
-                    startSignal.await();
-                    System.out.println(Thread.currentThread().getName() + "正在全力冲刺");
-                    endSignal.countDown();
-                    System.out.println(Thread.currentThread().getName() + "  到达终点");
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            executorService.execute(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        System.out.println(Thread.currentThread().getName() + " 运动员等待裁判员响哨！！！");
+                        startSignal.await();
+                        System.out.println(Thread.currentThread().getName() + "正在全力冲刺");
+                        endSignal.countDown();
+                        System.out.println(Thread.currentThread().getName() + "  到达终点");
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         }

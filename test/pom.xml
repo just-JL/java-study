@@ -21,6 +21,7 @@
     </build>
 
     <dependencies>
+        <!-- spring start -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
@@ -38,6 +39,7 @@
             <artifactId>spring-webmvc</artifactId>
             <version>4.1.4.RELEASE</version>
         </dependency>
+        <!-- spring end -->
 
         <!-- log start -->
         <dependency>
@@ -57,6 +59,7 @@
         </dependency>
         <!-- log end -->
 
+        <!-- rocketmq start -->
         <dependency>
             <groupId>org.apache.rocketmq</groupId>
             <artifactId>rocketmq-client</artifactId>
@@ -84,21 +87,25 @@
             <version>1.1.8</version>
         </dependency>
         <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId> <!-- Use 'netty-all' for 4.0 or above -->
+            <version>4.1.32.Final</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- rocketmq start -->
+
+        <!-- other -->
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.10</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId> <!-- Use 'netty-all' for 4.0 or above -->
-            <version>4.1.32.Final</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.16.10</version>
         </dependency>
+        <!-- other -->
     </dependencies>
 </project>

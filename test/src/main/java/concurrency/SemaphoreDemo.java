@@ -20,17 +20,20 @@ public class SemaphoreDemo {
         //表示50个学生
         ExecutorService service = Executors.newFixedThreadPool(10);
         for (int i = 0; i < 10; i++) {
-            service.execute(() -> {
-                try {
-                    System.out.println(Thread.currentThread().getName() + "  同学准备获取笔......");
-                    semaphore.acquire();
-                    System.out.println(Thread.currentThread().getName() + "  同学获取到笔");
-                    System.out.println(Thread.currentThread().getName() + "  填写表格ing.....");
-                    TimeUnit.SECONDS.sleep(3);
-                    semaphore.release();
-                    System.out.println(Thread.currentThread().getName() + "  填写完表格，归还了笔！！！！！！");
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            service.execute(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        System.out.println(Thread.currentThread().getName() + "  同学准备获取笔......");
+                        semaphore.acquire();
+                        System.out.println(Thread.currentThread().getName() + "  同学获取到笔");
+                        System.out.println(Thread.currentThread().getName() + "  填写表格ing.....");
+                        TimeUnit.SECONDS.sleep(3);
+                        semaphore.release();
+                        System.out.println(Thread.currentThread().getName() + "  填写完表格，归还了笔！！！！！！");
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         }
