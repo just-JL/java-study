@@ -106,6 +106,11 @@
             <artifactId>lombok</artifactId>
             <version>1.16.10</version>
         </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.9.2</version>
+        </dependency>
         <!-- other -->
     </dependencies>
 </project>
