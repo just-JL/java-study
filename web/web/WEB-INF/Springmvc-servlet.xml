@@ -7,7 +7,7 @@
     <bean id="simpleUrlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
         <property name="mappings">
                 <props>
-                    <prop key = "/userlist.htm">userController</prop>
+                    <prop key = "/Springmvc/userlist.htm">userController</prop>
                 </props>
         </property>
     </bean>
