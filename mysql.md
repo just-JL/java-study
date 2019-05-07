@@ -303,6 +303,8 @@ possible_keys: PRIMARY
 
     count(*) 跟 count(1) 的结果一样，都包括对NULL的统计，而count(column) 是不包括NULL的统计
 
+32. [limit优化](https://www.cnblogs.com/shiwenhu/p/5757250.html)
+
 # 四 、复制
 
 
