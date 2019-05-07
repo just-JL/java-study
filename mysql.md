@@ -303,16 +303,7 @@ possible_keys: PRIMARY
 
     count(*) 跟 count(1) 的结果一样，都包括对NULL的统计，而count(column) 是不包括NULL的统计
 
-32. 
-
-33. 
-
-34. 
-
-35. 
-
-
-# 四、高级特性
+# 四 、复制
 
 
 
@@ -320,15 +311,7 @@ possible_keys: PRIMARY
 
 
 
-# 五 、复制
-
-
-
-
-
-
-
-# 六、高可用
+# 五、高可用
 
 
 
