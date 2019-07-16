@@ -20,7 +20,7 @@ Q：GC 是在什么时候，对什么东西，做了什么事情？
 
 ### 2.1 运行时数据区
 
-![1563246180580](C:\Users\jiliang\AppData\Roaming\Typora\typora-user-images\1563246180580.png)
+![1563246180580](https://www.cnblogs.com/images/cnblogs_com/just-JL/1438653/o_1563246180580.png)
 
 1. **程序计数器**可以看作是当前线程所执行的字节码的行号计数器。每个线程都需要有一个独立的程序计数器，以保证线程切换后能恢复到正确的执行位置，属于线程私有的内存。是唯一一个java虚拟机规范中没有任何 OutofMemoryError 情况的区域。
 2. **虚拟机栈**描述的是 java 方法执行的内存模型，每个方法在执行的时候都会创建一个***栈帧***。也是线程私有的，其生命周期与线程相同。在 java 虚拟机规范中，对这个区域规定了两种异常情况：
@@ -34,7 +34,7 @@ Q：GC 是在什么时候，对什么东西，做了什么事情？
 
 ### 2.2 HotSpot 虚拟机的垃圾收集器
 
-![1563200309092](C:\Users\jiliang\AppData\Roaming\Typora\typora-user-images\1563200309092.png)
+![1563200309092](https://www.cnblogs.com/images/cnblogs_com/just-JL/1438653/o_1563200309092.png)
 
 1. **Serial收集器**是一个单线程的收集器，在进行垃圾收集时必须暂停其他所有的工作线程，直到它收集结束。新生代采用复制算法。
 
@@ -92,17 +92,17 @@ Q：GC 是在什么时候，对什么东西，做了什么事情？
 
 **垃圾收集器参数总结： **
 
-![1563204911380](C:\Users\jiliang\AppData\Roaming\Typora\typora-user-images\1563204911380.png)
+![1563204911380](https://www.cnblogs.com/images/cnblogs_com/just-JL/1438653/o_1563204911380.png)
 
 ### 2.3 双亲委派机制
 
-![1563257000932](C:\Users\jiliang\AppData\Roaming\Typora\typora-user-images\1563257000932.png)
+![1563257000932](https://www.cnblogs.com/images/cnblogs_com/just-JL/1438653/o_1563257000932.png)
 
 **双亲委派模型**的工作过程是：如果一个类加载器收到了类加载的请求，它首先不会自己去尝试加载这个类，而是把这个请求委派给父类加载器去完成，每一个层次的类加载器都是如此，因此所有的加载请求最终都应该传送到顶层的启动类加载器中，只有当父加载器反馈自己无法完成这个加载请求（它的搜索范围中没有找到所需的类）时，子加载器才会尝试自己去加载。
 
 ### 2.4 栈帧的概念结构
 
-![1563205813734](C:\Users\jiliang\AppData\Roaming\Typora\typora-user-images\1563205813734.png)
+![1563205813734](https://www.cnblogs.com/images/cnblogs_com/just-JL/1438653/o_1563205813734.png)
 
 栈帧是用于支持虚拟机进行方法调用和方法执行的数据结构，它是虚拟机运行时数据区中的虚拟机栈（Virtual Machine Stack）的栈元素。栈帧存储了方法的局部变量表、操作数栈、动态连接和方法返回地址等信息。每一个方法从调用开始至执行完成的过程，都对应着一个栈帧在虚拟机栈里面从入栈到出栈的过程
 
@@ -113,7 +113,7 @@ Q：GC 是在什么时候，对什么东西，做了什么事情？
 
 ### 2.5 java内存模型
 
-![1563206410504](C:\Users\jiliang\AppData\Roaming\Typora\typora-user-images\1563206410504.png)
+![1563206410504](https://www.cnblogs.com/images/cnblogs_com/just-JL/1438653/o_1563206410504.png)
 
 Java内存模型规定了所有的变量都存储在主内存（Main Memory）中（此处的主内存与介绍物理硬件时的主内存名字一样，两者也可以互相类比，但此处仅是虚拟机内存的一部分）。每条线程还有自己的工作内存（Working Memory，可与前面讲的处理器高速缓存类比），线程的工作内存中保存了被该线程使用到的变量的主内存副本拷贝，线程对变量的所有操作（读取、赋值等）都必须在工作内存中进行，而不能直接读写主内存中的变量。不同的线程之间也无法直接访问对方工作内存中的变量，线程间变量值的传递均需要通过主内存来完成。
 
